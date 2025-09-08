@@ -20,6 +20,8 @@
 #define MAGENTA     "\033[35m"
 #define CYAN        "\033[36m"
 #define WHITE       "\033[37m"
+#define GREY        "\033[90m"
+
 
 // Bright text colors
 #define BBLACK      "\033[90m"
@@ -72,7 +74,33 @@ int main() {
     system("clear");
 
     while (1) {
-        printf("\n$ > ");
+
+        // Getting username
+        char *username = getenv("USER");
+        if (!username) username = "unknown";
+
+        // Getting Hostname
+        char hostname[HOST_NAME_MAX + 1]; // +1 for null terminator
+        if (gethostname(hostname, sizeof(hostname)) != 0) {
+            strcpy(hostname, "unknown");
+        }
+
+        // Getting current dir
+        char cwd[PATH_MAX];
+        char *current_dir = NULL;
+        if (getcwd(cwd, sizeof(cwd)) != NULL) {
+            current_dir = cwd;
+        } else {
+            current_dir = "unknown";
+        }
+
+        // Prompt
+        printf(
+            BLUE "\n┌─ $ " RESET
+            GREY "(" BOLD YELLOW "%s" RESET BRED "@" BOLD YELLOW "%s" RESET GREY ") - " RESET
+            GREY "{" BOLD CYAN "%s" RESET GREY "}" RESET BLUE "\n└─> " RESET,
+            username, hostname, current_dir
+        );
         
         // Read input
         if (fgets(buff, n, stdin) == NULL) {
@@ -133,9 +161,9 @@ int main() {
                 struct stat st;
                 if (stat(path, &st) == 0) {
                     if (S_ISDIR(st.st_mode)) {
-                        printf("%s/\n", de->d_name);  // directory
+                        printf(BOLD CYAN"%s/\n"RESET, de->d_name);  // directory
                     } else {
-                        printf("%s\n", de->d_name);   // file
+                        printf(BOLD GREEN"%s\n"RESET, de->d_name);   // file
                     }
                 } else {
                     printf("%s\n", de->d_name);  // fallback
