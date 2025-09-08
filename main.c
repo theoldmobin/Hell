@@ -4,8 +4,13 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <linux/limits.h>
+#include <termios.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include <sys/wait.h>
+#define _POSIX_SOURCE
 
 
 // -------------------- ANSI COLORS & TEXT EFFECTS --------------------
@@ -63,9 +68,6 @@
 #define HIDDEN      "\033[8m"
 #define STRIKETHROUGH "\033[9m"
 
-// int proccess(){
-
-// }
 
 int main() {
     char buff[100];  
@@ -223,11 +225,64 @@ int main() {
             continue;
         }
 
+        //WHOAMI
+        if (strcmp(token, "whoami") == 0 ) {
+            printf("%s",username);
+            continue;
+        }
+
+
         // CLEAR
         if (strcmp(token, "clear") == 0 ) {
             system("clear");
             continue;
         }
+        
+
+        // RMDIR
+        if (strcmp(token, "rmdir") == 0 ) {
+            struct stat st = {0};
+            token = strtok(NULL, " "); // To find second token
+
+
+            if (token == NULL){
+                printf("\0");
+                continue;
+            }
+            if (stat(token, &st) == 0 && S_ISDIR(st.st_mode)) {
+                char dir_path[PATH_MAX];
+                snprintf(dir_path, sizeof(dir_path), "%s/%s", current_dir, token);
+                if (rmdir(dir_path) == 0) {
+                    printf(YELLOW"Directory removed: %s\n"RESET, dir_path);
+                }
+            }
+                else{
+                    printf(BRED"Directory '%s' Does not exist."RESET,token);
+                }
+                continue;
+        }
+
+
+
+        // MKDIR
+        if (strcmp(token, "mkdir") == 0 ) {
+            struct stat st = {0};
+            token = strtok(NULL, " "); // To find second token
+
+
+            if (stat(token, &st) == -1) {
+                mkdir(token, 0700);
+            }
+            else{
+                printf(BRED"Directory '%s' Already exist."RESET,token);
+            }
+            continue;
+        }
+
+        if (strcmp(token, "touch") == 0 ) {
+
+        }
+        
 
         // unknown command
         printf("%s: Command Not Found.\n", original_buff);
