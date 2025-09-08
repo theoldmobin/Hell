@@ -69,6 +69,10 @@
 
 
 
+
+
+
+
 int main() {
     char buff[1024];  
 
@@ -163,7 +167,7 @@ int main() {
 
 
         // ECHO
-        if (strcmp(token, "echo") == 0) {
+        if (strcmp(token, "echo") == 0 || strcmp(token, "ec") == 0) {
             token = strtok(NULL, " "); // first argument after echo
 
             if (token == NULL) {
@@ -211,21 +215,21 @@ int main() {
         }
 
         //WHOAMI
-        if (strcmp(token, "whoami") == 0 ) {
+        if (strcmp(token, "whoami") == 0 || strcmp(token, "wmi") == 0) {
             printf("%s",username);
             continue;
         }
 
 
         // CLEAR
-        if (strcmp(token, "clear") == 0 ) {
+        if (strcmp(token, "clear") == 0  || strcmp(token, "clr") == 0 || strcmp(token, "cls") == 0){
             system("clear");
             continue;
         }
         
 
         // RMDIR
-        if (strcmp(token, "rmdir") == 0 ) {
+        if (strcmp(token, "rmdir") == 0 || strcmp(token, "rdr") == 0) {
             struct stat st = {0};
             token = strtok(NULL, " "); // To find second token
 
@@ -249,7 +253,7 @@ int main() {
 
 
         // MKDIR
-        if (strcmp(token, "mkdir") == 0 ) {
+        if (strcmp(token, "mkdir") == 0 || strcmp(token, "mdr") == 0) {
             struct stat st = {0};
             token = strtok(NULL, " "); // To find second token
 
@@ -263,11 +267,32 @@ int main() {
             continue;
         }
 
-        if (strcmp(token, "touch") == 0 ) {
+        // TOUCH
+        if (strcmp(token, "touch") == 0 || strcmp(token, "tch") == 0) {
+            token = strtok(NULL, " "); // filename
 
-        }
+            if (token == NULL) {
+                printf("touch: missing file operand\n");
+                continue;
+            }
+
+            char file_name[1024]; // buffer for filename
+            snprintf(file_name, sizeof(file_name), "%s", token);
+
+            FILE *fp = fopen(file_name, "a"); // open for append, creates if not exists
+            if (fp == NULL) {
+                perror("touch");
+                continue;
+            }
+
+            fclose(fp);
+            continue;
+    }
         
-
+    if (strcmp(token, "help") == 0 ) {
+        // Listing Commmands...
+        continue;
+    }
         // unknown command
         printf("%s: Command Not Found.\n", original_buff);
 
