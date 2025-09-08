@@ -10,7 +10,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/wait.h>
-#define _POSIX_SOURCE
 
 
 // -------------------- ANSI COLORS & TEXT EFFECTS --------------------
@@ -69,76 +68,62 @@
 #define STRIKETHROUGH "\033[9m"
 
 
+
 int main() {
-    char buff[100];  
-    int n = 100;
+    char buff[1024];  
 
     system("clear");
 
     while (1) {
 
-        // Getting username
+        // Get username, hostname, current dir
         char *username = getenv("USER");
         if (!username) username = "unknown";
 
-        // Getting Hostname
-        char hostname[HOST_NAME_MAX + 1]; // +1 for null terminator
-        if (gethostname(hostname, sizeof(hostname)) != 0) {
-            strcpy(hostname, "unknown");
-        }
+        char hostname[HOST_NAME_MAX + 1];
+        if (gethostname(hostname, sizeof(hostname)) != 0) strcpy(hostname, "unknown");
 
-        // Getting current dir
         char cwd[PATH_MAX];
-        char *current_dir = NULL;
-        if (getcwd(cwd, sizeof(cwd)) != NULL) {
-            current_dir = cwd;
-        } else {
-            current_dir = "unknown";
-        }
+        if (getcwd(cwd, sizeof(cwd)) == NULL) strcpy(cwd, "unknown");
 
-        // Prompt
-        printf(
-            BLUE "\n┌─ $ " RESET
-            GREY "(" BOLD YELLOW "%s" RESET BRED "@" BOLD YELLOW "%s" RESET GREY ") - " RESET
-            GREY "{" BOLD CYAN "%s" RESET GREY "}" RESET BLUE "\n└─> " RESET,
-            username, hostname, current_dir
-        );
-        
-        // Read input
-        if (fgets(buff, n, stdin) == NULL) {
-            continue;  // handle input error
-        }
-        // Remove trailing newline
-        buff[strcspn(buff, "\n")] = '\0';
+        // Build prompt
+        char prompt[1024];
+        snprintf(prompt, sizeof(prompt),
+                 "\033[34m\n┌─ $ \033[0m\033[90m(\033[1m\033[33m%s\033[0m\033[90m@\033[1m\033[33m%s\033[0m\033[90m) - \033[90m{\033[1m\033[36m%s\033[0m\033[90m}\033[0m\n\033[34m└─> \033[0m",
+                 username, hostname, cwd);
+
+        // Read input using readline
+        char *input = readline(prompt);
+        if (!input) continue;  // Handle Ctrl+D
 
         // Skip empty input
-        if (buff[0] == '\0') {
-            continue;
-        }
-        // Exit condition
-        if (strcmp(buff, "exit") == 0) {
-            break;
-        }
+        if (strlen(input) == 0) { free(input); continue; }
 
-        // Make a copy of buff to use for error messages
-        char original_buff[100];
+        // Add to history
+        add_history(input);
+
+        strncpy(buff, input, sizeof(buff)-1);
+        buff[sizeof(buff)-1] = '\0';
+        free(input);
+
+        // Exit condition
+        if (strcmp(buff, "exit") == 0) break;
+
+        // Make a copy for errors
+        char original_buff[1024];
         strcpy(original_buff, buff);
 
-        // Tokenizing the cmd
-        char* token = strtok(buff, " ");
+        // Tokenize
+        char *token = strtok(buff, " ");
 
         // --------- BUILT-IN COMMANDs -----------
 
         // PWD
-        if (strcmp(token, "pwd") == 0 ) 
-        {
-            char cwd[PATH_MAX];
-            if (getcwd(cwd, sizeof(cwd)) != NULL) {
-                 printf("%s\n", cwd);
-            }
-
-            else { perror("getcwd() error"); return 1; }
-            continue; 
+         if (strcmp(token, "pwd") == 0) {
+            char cwd2[PATH_MAX];
+            if (getcwd(cwd2, sizeof(cwd2))) printf("%s\n", cwd2);
+            else perror("getcwd() error");
+            continue;
         }
         // LS (manual implementation)
         if (strcmp(token, "ls") == 0) {
@@ -246,12 +231,11 @@ int main() {
 
 
             if (token == NULL){
-                printf("\0");
                 continue;
             }
             if (stat(token, &st) == 0 && S_ISDIR(st.st_mode)) {
                 char dir_path[PATH_MAX];
-                snprintf(dir_path, sizeof(dir_path), "%s/%s", current_dir, token);
+                snprintf(dir_path, sizeof(dir_path), "%s/%s", cwd, token);
                 if (rmdir(dir_path) == 0) {
                     printf(YELLOW"Directory removed: %s\n"RESET, dir_path);
                 }
