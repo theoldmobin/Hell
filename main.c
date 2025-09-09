@@ -70,6 +70,28 @@
 
 
 
+// Function to execute external commands
+void execute_external_command(char **args) {
+    pid_t pid = fork();
+    
+    if (pid == 0) {
+        // Child process
+        execvp(args[0], args);
+        // If execvp returns, there was an error
+        perror("execvp failed");
+        exit(EXIT_FAILURE);
+    } 
+    else if (pid < 0) {
+        // Fork failed
+        perror("fork failed");
+    } 
+    else {
+        // Parent process - wait for child to complete
+        int status;
+        waitpid(pid, &status, 0);
+    }
+}
+
 
 void printHelp(){
         printf(BOLD RED "\n  ================== HELL COMMANDS HELP ==================\n" RESET);
@@ -136,13 +158,23 @@ void process_color_names(char *str) {
             dst += strlen(WHITE);
             src += 5;
         }
+        else if (strncmp(src, "BLACK", 5) == 0) {
+            strcpy(dst, BLACK);
+            dst += strlen(BLACK);
+            src += 5;
+        }
         else if (strncmp(src, "GREY", 4) == 0) {
             strcpy(dst, GREY);
             dst += strlen(GREY);
             src += 4;
         }
 
-        // Bright Colors
+        // Bright text colors
+        else if (strncmp(src, "BBLACK", 6) == 0) {
+            strcpy(dst, BBLACK);
+            dst += strlen(BBLACK);
+            src += 6;
+        }
         else if (strncmp(src, "BRED", 4) == 0) {
             strcpy(dst, BRED);
             dst += strlen(BRED);
@@ -179,38 +211,130 @@ void process_color_names(char *str) {
             src += 6;
         }
 
-        // Background Colors
-        else if (strncmp(src, "BGBLUE", 6) == 0) {
-            strcpy(dst, BGBLUE);
-            dst += strlen(BGBLUE);
-            src += 6;
+        // Background colors
+        else if (strncmp(src, "BGBLACK", 7) == 0) {
+            strcpy(dst, BGBLACK);
+            dst += strlen(BGBLACK);
+            src += 7;
+        }
+        else if (strncmp(src, "BGRED", 5) == 0) {
+            strcpy(dst, BGRED);
+            dst += strlen(BGRED);
+            src += 5;
+        }
+        else if (strncmp(src, "BGGREEN", 7) == 0) {
+            strcpy(dst, BGGREEN);
+            dst += strlen(BGGREEN);
+            src += 7;
         }
         else if (strncmp(src, "BGYELLOW", 8) == 0) {
             strcpy(dst, BGYELLOW);
             dst += strlen(BGYELLOW);
             src += 8;
         }
-        else if (strncmp(src, "BGRED", 5) == 0) {
-            strcpy(dst, BGRED);
-            dst += strlen(BGRED);
-            src += 5;
+        else if (strncmp(src, "BGBLUE", 6) == 0) {
+            strcpy(dst, BGBLUE);
+            dst += strlen(BGBLUE);
+            src += 6;
         }
-        else if (strncmp(src, "BGRED", 5) == 0) {
-            strcpy(dst, BGRED);
-            dst += strlen(BGRED);
-            src += 5;
+        else if (strncmp(src, "BGMAGENTA", 9) == 0) {
+            strcpy(dst, BGMAGENTA);
+            dst += strlen(BGMAGENTA);
+            src += 9;
+        }
+        else if (strncmp(src, "BGCYAN", 6) == 0) {
+            strcpy(dst, BGCYAN);
+            dst += strlen(BGCYAN);
+            src += 6;
+        }
+        else if (strncmp(src, "BGWHITE", 7) == 0) {
+            strcpy(dst, BGWHITE);
+            dst += strlen(BGWHITE);
+            src += 7;
         }
 
-        // Text formats
+        // Bright background colors
+        else if (strncmp(src, "BGBBLACK", 8) == 0) {
+            strcpy(dst, BGBBLACK);
+            dst += strlen(BGBBLACK);
+            src += 8;
+        }
+        else if (strncmp(src, "BGRED_B", 7) == 0) {
+            strcpy(dst, BGRED_B);
+            dst += strlen(BGRED_B);
+            src += 7;
+        }
+        else if (strncmp(src, "BGGREEN_B", 9) == 0) {
+            strcpy(dst, BGGREEN_B);
+            dst += strlen(BGGREEN_B);
+            src += 9;
+        }
+        else if (strncmp(src, "BGYELLOW_B", 10) == 0) {
+            strcpy(dst, BGYELLOW_B);
+            dst += strlen(BGYELLOW_B);
+            src += 10;
+        }
+        else if (strncmp(src, "BGBBLUE_B", 9) == 0) {
+            strcpy(dst, BGBBLUE_B);
+            dst += strlen(BGBBLUE_B);
+            src += 9;
+        }
+        else if (strncmp(src, "BGMAGENTA_B", 11) == 0) {
+            strcpy(dst, BGMAGENTA_B);
+            dst += strlen(BGMAGENTA_B);
+            src += 11;
+        }
+        else if (strncmp(src, "BGCYAN_B", 8) == 0) {
+            strcpy(dst, BGCYAN_B);
+            dst += strlen(BGCYAN_B);
+            src += 8;
+        }
+        else if (strncmp(src, "BGWHITE_B", 9) == 0) {
+            strcpy(dst, BGWHITE_B);
+            dst += strlen(BGWHITE_B);
+            src += 9;
+        }
+
+        // Text effects
         else if (strncmp(src, "BOLD", 4) == 0) {
             strcpy(dst, BOLD);
             dst += strlen(BOLD);
             src += 4;
         }
+        else if (strncmp(src, "DIM", 3) == 0) {
+            strcpy(dst, DIM);
+            dst += strlen(DIM);
+            src += 3;
+        }
+        else if (strncmp(src, "ITALIC", 6) == 0) {
+            strcpy(dst, ITALIC);
+            dst += strlen(ITALIC);
+            src += 6;
+        }
         else if (strncmp(src, "UNDERLINE", 9) == 0) {
             strcpy(dst, UNDERLINE);
             dst += strlen(UNDERLINE);
             src += 9;
+        }
+        else if (strncmp(src, "BLINK", 5) == 0) {
+            strcpy(dst, BLINK);
+            dst += strlen(BLINK);
+            src += 5;
+        }
+        else if (strncmp(src, "INVERT", 6) == 0) {
+            strcpy(dst, INVERT);
+            dst += strlen(INVERT);
+            src += 6;
+        }
+        else if (strncmp(src, "HIDDEN", 6) == 0) {
+            strcpy(dst, HIDDEN);
+            dst += strlen(HIDDEN);
+            src += 6;
+        }
+        else if (strncmp(src, "STRIKETHROUGH", 13) == 0) {
+            strcpy(dst, STRIKETHROUGH);
+            dst += strlen(STRIKETHROUGH);
+            src += 13;
         }
         else if (strncmp(src, "RESET", 5) == 0) {
             strcpy(dst, RESET);
@@ -539,6 +663,27 @@ int main() {
     if (strcmp(token, "help") == 0 ) {
         
         printHelp();
+        continue;
+    }
+
+
+    // External commands
+    else {
+        // Parse the entire command into arguments
+        char *args[64];  // Maximum 64 arguments
+        int arg_count = 0;
+        
+        // First token is the command
+        args[arg_count++] = token;
+        
+        // Get remaining arguments
+        while ((token = strtok(NULL, " ")) != NULL && arg_count < 63) {
+            args[arg_count++] = token;
+        }
+        args[arg_count] = NULL;  // Null-terminate the argument list
+        
+        // Execute the external command
+        execute_external_command(args);
         continue;
     }
         // unknown command
