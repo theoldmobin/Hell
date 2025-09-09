@@ -71,16 +71,216 @@
 
 
 
+void printHelp(){
+        printf(BOLD RED "\n  ================== HELL COMMANDS HELP ==================\n" RESET);
+        printf(BOLD BRED "  pwd" RESET "       - Print current working directory\n");
+        printf(BOLD BRED "  ls" RESET "        - List files and directories\n");
+        printf(BOLD BRED "  cd" RESET "        - Change directory (default HOME)\n");
+        printf(BOLD BRED "  echo/ec" RESET "   - Print text to the terminal\n");
+        printf(BOLD BRED "  whoami/wmi" RESET " - Show current user\n");
+        printf(BOLD BRED "  clear/clr/cls" RESET " - Clear the terminal screen\n");
+        printf(BOLD BRED "  mkdir/mdr" RESET " - Create a new directory\n");
+        printf(BOLD BRED "  rmdir/rmd" RESET " - Remove an empty directory\n");
+        printf(BOLD BRED "  rm" RESET "        - Remove a file\n");
+        printf(BOLD BRED "  touch/tch" RESET " - Create an empty file or update timestamp\n");
+        printf(BOLD BRED "  exit" RESET "       - Exit the shell\n");
+        printf(BOLD BRED "  help" RESET "       - Show this help message\n");
+        printf(BOLD RED "  =======================================================\n\n" RESET);
+}
+
+
+
+// Function to convert color names to ANSI escape sequences
+void process_color_names(char *str) {
+    // Create a temporary buffer
+    char temp[2048] = {0};
+    char *src = str;
+    char *dst = temp;
+    
+    while (*src) {
+        // Check for color names
+
+        // Basic Colors
+        if (strncmp(src, "RED", 3) == 0) {
+            strcpy(dst, RED);
+            dst += strlen(RED);
+            src += 3;
+        }
+        else if (strncmp(src, "GREEN", 5) == 0) {
+            strcpy(dst, GREEN);
+            dst += strlen(GREEN);
+            src += 5;
+        }
+        else if (strncmp(src, "YELLOW", 6) == 0) {
+            strcpy(dst, YELLOW);
+            dst += strlen(YELLOW);
+            src += 6;
+        }
+        else if (strncmp(src, "BLUE", 4) == 0) {
+            strcpy(dst, BLUE);
+            dst += strlen(BLUE);
+            src += 4;
+        }
+        else if (strncmp(src, "MAGENTA", 7) == 0) {
+            strcpy(dst, MAGENTA);
+            dst += strlen(MAGENTA);
+            src += 7;
+        }
+        else if (strncmp(src, "CYAN", 4) == 0) {
+            strcpy(dst, CYAN);
+            dst += strlen(CYAN);
+            src += 4;
+        }
+        else if (strncmp(src, "WHITE", 5) == 0) {
+            strcpy(dst, WHITE);
+            dst += strlen(WHITE);
+            src += 5;
+        }
+        else if (strncmp(src, "GREY", 4) == 0) {
+            strcpy(dst, GREY);
+            dst += strlen(GREY);
+            src += 4;
+        }
+
+        // Bright Colors
+        else if (strncmp(src, "BRED", 4) == 0) {
+            strcpy(dst, BRED);
+            dst += strlen(BRED);
+            src += 4;
+        }
+        else if (strncmp(src, "BGREEN", 6) == 0) {
+            strcpy(dst, BGREEN);
+            dst += strlen(BGREEN);
+            src += 6;
+        }
+        else if (strncmp(src, "BYELLOW", 7) == 0) {
+            strcpy(dst, BYELLOW);
+            dst += strlen(BYELLOW);
+            src += 7;
+        }
+        else if (strncmp(src, "BBLUE", 5) == 0) {
+            strcpy(dst, BBLUE);
+            dst += strlen(BBLUE);
+            src += 5;
+        }
+        else if (strncmp(src, "BMAGENTA", 8) == 0) {
+            strcpy(dst, BMAGENTA);
+            dst += strlen(BMAGENTA);
+            src += 8;
+        }
+        else if (strncmp(src, "BCYAN", 5) == 0) {
+            strcpy(dst, BCYAN);
+            dst += strlen(BCYAN);
+            src += 5;
+        }
+        else if (strncmp(src, "BWHITE", 6) == 0) {
+            strcpy(dst, BWHITE);
+            dst += strlen(BWHITE);
+            src += 6;
+        }
+
+        // Background Colors
+        else if (strncmp(src, "BGBLUE", 6) == 0) {
+            strcpy(dst, BGBLUE);
+            dst += strlen(BGBLUE);
+            src += 6;
+        }
+        else if (strncmp(src, "BGYELLOW", 8) == 0) {
+            strcpy(dst, BGYELLOW);
+            dst += strlen(BGYELLOW);
+            src += 8;
+        }
+        else if (strncmp(src, "BGRED", 5) == 0) {
+            strcpy(dst, BGRED);
+            dst += strlen(BGRED);
+            src += 5;
+        }
+        else if (strncmp(src, "BGRED", 5) == 0) {
+            strcpy(dst, BGRED);
+            dst += strlen(BGRED);
+            src += 5;
+        }
+
+        // Text formats
+        else if (strncmp(src, "BOLD", 4) == 0) {
+            strcpy(dst, BOLD);
+            dst += strlen(BOLD);
+            src += 4;
+        }
+        else if (strncmp(src, "UNDERLINE", 9) == 0) {
+            strcpy(dst, UNDERLINE);
+            dst += strlen(UNDERLINE);
+            src += 9;
+        }
+        else if (strncmp(src, "RESET", 5) == 0) {
+            strcpy(dst, RESET);
+            dst += strlen(RESET);
+            src += 5;
+        }
+        else {
+            // Copy regular characters
+            *dst++ = *src++;
+        }
+    }
+    
+    // Copy the processed string back to the original
+    strcpy(str, temp);
+}
+
+// Helper function to convert escape sequences to actual characters
+void process_escape_sequences(char *str) {
+    char temp[2048] = {0};
+    char *src = str;
+    char *dst = temp;
+    
+    while (*src) {
+        if (*src == '\\') {
+            src++;
+            switch (*src) {
+                case '0': 
+                    if (src[1] == '3' && src[2] == '3') {
+                        *dst++ = '\033';
+                        src += 3;
+                    } else {
+                        *dst++ = '\\';
+                    }
+                    break;
+                case 'n': *dst++ = '\n'; src++; break;
+                case 't': *dst++ = '\t'; src++; break;
+                case 'r': *dst++ = '\r'; src++; break;
+                default: 
+                    *dst++ = '\\';
+                    *dst++ = *src++;
+                    break;
+            }
+        } else {
+            *dst++ = *src++;
+        }
+    }
+    *dst = '\0';
+    
+    // Copy the processed string back to the original
+    strcpy(str, temp);
+}
+
+
 
 
 int main() {
     char buff[1024];  
 
+    // Get absolute path to config file
+    char configPath[PATH_MAX];
+    if (realpath("../prompt.config", configPath) == NULL) {
+        perror("Error resolving config file path");
+        exit(EXIT_FAILURE);
+    }
+
     system("clear");
 
     while (1) {
 
-        // Get username, hostname, current dir
+               // Get username, hostname, current dir
         char *username = getenv("USER");
         if (!username) username = "unknown";
 
@@ -90,15 +290,50 @@ int main() {
         char cwd[PATH_MAX];
         if (getcwd(cwd, sizeof(cwd)) == NULL) strcpy(cwd, "unknown");
 
-        // Build prompt
         char prompt[1024];
-        snprintf(prompt, sizeof(prompt),
-                 "\033[34m\n┌─ $ \033[0m\033[90m(\033[1m\033[33m%s\033[0m\033[90m@\033[1m\033[33m%s\033[0m\033[90m) - \033[90m{\033[1m\033[36m%s\033[0m\033[90m}\033[0m\n\033[34m└─> \033[0m",
-                 username, hostname, cwd);
+        char configPrompt[2048] = {0}; // Larger buffer for processing
+        char ch;
+        
+        // Use absolute path to config file
+        FILE *fptr = fopen(configPath, "r");
+        if (!fptr) {
+            perror("Error opening config file");
+            exit(EXIT_FAILURE);
+        }
+
+        // Read file with bounds checking
+        int i;
+        for (i = 0; i < sizeof(configPrompt) - 1 && (ch = fgetc(fptr)) != EOF; i++) {
+            configPrompt[i] = ch;
+        }
+        configPrompt[i] = '\0';
+        fclose(fptr);
+
+        // Parse the format string from configPrompt
+        char *formatStart = strchr(configPrompt, '"');
+        if (formatStart) {
+            formatStart++; // Skip the first quote
+            char *formatEnd = strrchr(formatStart, '"');
+            if (formatEnd) {
+                *formatEnd = '\0'; // Terminate at the closing quote
+            }
+        } else {
+            formatStart = configPrompt;
+        }
+
+        // Process color names and text effects
+        process_color_names(formatStart);
+        
+        // Process escape sequences in the format string
+        process_escape_sequences(formatStart);
+
+        // Build prompt with the required variables
+        snprintf(prompt, sizeof(prompt), formatStart, username, hostname, cwd);
 
         // Read input using readline
         char *input = readline(prompt);
-        if (!input) continue;  // Handle Ctrl+D
+        if (!input) continue;
+
 
         // Skip empty input
         if (strlen(input) == 0) { free(input); continue; }
@@ -227,9 +462,18 @@ int main() {
             continue;
         }
         
+        //RM
+        if(strcmp(token, "rm")==0){
+            token = strtok(NULL, " "); // To find second token
+            if(token == NULL){
+                continue;
+            }
+            remove(token);
+            continue;
+        }
 
         // RMDIR
-        if (strcmp(token, "rmdir") == 0 || strcmp(token, "rdr") == 0) {
+        if (strcmp(token, "rmdir") == 0 || strcmp(token, "rmd") == 0) {
             struct stat st = {0};
             token = strtok(NULL, " "); // To find second token
 
@@ -257,6 +501,9 @@ int main() {
             struct stat st = {0};
             token = strtok(NULL, " "); // To find second token
 
+            if(token == NULL){
+                continue;
+            }
 
             if (stat(token, &st) == -1) {
                 mkdir(token, 0700);
@@ -290,7 +537,8 @@ int main() {
     }
         
     if (strcmp(token, "help") == 0 ) {
-        // Listing Commmands...
+        
+        printHelp();
         continue;
     }
         // unknown command
