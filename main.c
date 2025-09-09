@@ -94,21 +94,342 @@ void execute_external_command(char **args) {
 
 
 void printHelp(){
-        printf(BOLD RED "\n  ================== HELL COMMANDS HELP ==================\n" RESET);
-        printf(BOLD BRED "  pwd" RESET "       - Print current working directory\n");
-        printf(BOLD BRED "  ls" RESET "        - List files and directories\n");
-        printf(BOLD BRED "  cd" RESET "        - Change directory (default HOME)\n");
-        printf(BOLD BRED "  echo/ec" RESET "   - Print text to the terminal\n");
-        printf(BOLD BRED "  whoami/wmi" RESET " - Show current user\n");
-        printf(BOLD BRED "  clear/clr/cls" RESET " - Clear the terminal screen\n");
-        printf(BOLD BRED "  mkdir/mdr" RESET " - Create a new directory\n");
-        printf(BOLD BRED "  rmdir/rmd" RESET " - Remove an empty directory\n");
-        printf(BOLD BRED "  rm" RESET "        - Remove a file\n");
-        printf(BOLD BRED "  touch/tch" RESET " - Create an empty file or update timestamp\n");
-        printf(BOLD BRED "  exit" RESET "       - Exit the shell\n");
-        printf(BOLD BRED "  help" RESET "       - Show this help message\n");
-        printf(BOLD RED "  =======================================================\n\n" RESET);
-}
+
+        int page = 1;
+    while(1){
+            system("clear");
+            if(page == 1){
+                printf(BOLD BRED"\n  ================== HELL SHELL HELP CENTER ==================\n" RESET);
+                printf(BOLD RED "   ┕────────────────     PAGE-1 COMMANDS    ────────────────┙\n\n\n" RESET);
+                printf(BOLD BRED "    pwd" RESET "       - Print current working directory\n");
+                printf(BOLD BRED "    ls" RESET "        - List files and directories\n");
+                printf(BOLD BRED "    cd" RESET "        - Change directory (default HOME)\n");
+                printf(BOLD BRED "    echo/ec" RESET "   - Print text to the terminal\n");
+                printf(BOLD BRED "    whoami/wmi" RESET " - Show current user\n");
+                printf(BOLD BRED "    clear/clr/cls" RESET " - Clear the terminal screen\n");
+                printf(BOLD BRED "    mkdir/mdr" RESET " - Create a new directory\n");
+                printf(BOLD BRED "    rmdir/rmd" RESET " - Remove an empty directory\n");
+                printf(BOLD BRED "    rm" RESET "        - Remove a file\n");
+                printf(BOLD BRED "    touch/tch" RESET " - Create an empty file or update timestamp\n");
+                printf(BOLD BRED "    exit" RESET "       - Exit the shell\n");
+                printf(BOLD BRED "    help" RESET "       - Show this help message\n\n\n");
+
+                printf(GREY "     Enter 'd' To go to the next page.\n"RESET);
+                printf(GREY "     Enter 'q' To go to the quit.\n\n\n");
+                printf(BOLD RED "   ┌─────────────────────────────────────────────────────────┌\n" RESET);
+                printf(BOLD BRED"  =============================================================\n\n" RESET);
+                char input;
+                printf(GREY" ┕> "RESET);
+                scanf("%c",&input);
+                if (input == 'd'){
+                    page++;
+                    continue;
+                }
+                else if (input == 'q'){
+                    break;
+                }
+                else{
+                    continue;
+                }
+                
+        }
+
+
+
+        if(page == 2){
+                printf(BOLD BRED "\n  ================== HELL SHELL HELP CENTER ==================\n" RESET);
+                printf(BOLD RED "   ┕────────────────      PAGE-2 CONFIG     ────────────────┙\n\n" RESET);
+
+                printf(BYELLOW "    The Shell Prompt can be customized via editing the\n    'Hell/prompt.config' file.\n    You can see prompt syntax in the PROMPT CONFIG PAGE." RESET);
+
+
+
+                printf(GREY "\n\n\n     Enter 'a' To go to the previous page.\n"RESET);
+                printf(GREY "     Enter 'w' To go to the prompt config page.\n"RESET);
+                printf(GREY "     Enter 'q' To go to the quit.\n\n");
+
+                printf(BOLD RED "   ┌─────────────────────────────────────────────────────────┌\n" RESET);
+                printf(BOLD BRED"  =============================================================\n\n" RESET);
+                char input;
+                printf(GREY " ┕> "RESET);
+                scanf("%c",&input);
+                if (input == 'a'){
+                    page--;
+                    continue;
+                }
+                else if (input == 'q'){
+                    break;
+                }
+                else if (input == 'w'){
+                    page = 88;
+                }
+                else{
+                    continue;
+                }
+        }
+
+        if(page == 88){
+                printf(BOLD BYELLOW "\n  ==================  PROMPT CONFIG SYNTAX  ==================\n" RESET);
+                printf(BOLD YELLOW "   ┕────────────────     GETTING STARTED    ────────────────┙\n\n" RESET);
+
+                printf(BYELLOW "    The Shell Prompt can be customized via editing the\n    'Hell/prompt.config' file.\n    You can see prompt syntax in the PROMPT CONFIG PAGE." RESET);
+
+
+
+                printf(RESET GREY "\n\n\n     Enter 'd' To go to the next page.\n"RESET);
+                printf(GREY "     Enter 's' To return to the help page.\n"RESET);
+                printf(GREY "     Enter 'q' To go to the quit.\n\n"RESET);
+
+                printf(BOLD YELLOW "   ┌─────────────────────────────────────────────────────────┌\n" RESET);
+                printf(BOLD BYELLOW"  =============================================================\n\n" RESET);
+                char input;
+                printf(GREY " ┕> "RESET);
+                scanf("%c",&input);
+                if (input == 'd'){
+                    page++;
+                    continue;
+                }
+                else if (input == 'q'){
+                    break;
+                }
+                else if (input == 's'){
+                    page = 2;
+                }
+                else{
+                    continue;
+                }
+        }
+        if(page == 89){
+                printf(BOLD BYELLOW "\n  ==================  PROMPT CONFIG SYNTAX  ==================\n" RESET);
+                printf(BOLD YELLOW "   ┕────────────────   COLORS & FORMATS - 1   ──────────────┙\n\n\n\n" RESET);
+
+                printf(BYELLOW "    RESET:\n");
+                printf(RESET     "\t 'RESET'\n\n");
+
+                printf(BYELLOW "    COLORS: \n" RESET);
+                printf(RED     "\t'RED'\n");
+                printf(BLUE     "\t'BLUE'\n");
+                printf(YELLOW     "\t'YELLOW'\n");
+                printf(GREEN     "\t'GREEN'\n");
+                printf(CYAN     "\t'CYAN'\n");
+                printf(GREY     "\t'GREY'\n");
+                printf(MAGENTA     "\t'MAGENTA'\n");
+                printf(BGWHITE BLACK     "\t'BLACK'\n");
+
+
+
+
+                printf(RESET GREY "\n\n\n     Enter 'd' To go to the next page.\n"RESET);
+                printf(GREY "     Enter 's' To return to the help page.\n"RESET);
+                printf(GREY "     Enter 'a' To go to the previous page.\n"RESET);
+                printf(GREY "     Enter 'q' To go to the quit.\n\n"RESET);
+
+                printf(BOLD YELLOW "   ┌─────────────────────────────────────────────────────────┌\n" RESET);
+                printf(BOLD BYELLOW"  =============================================================\n\n" RESET);
+                char input;
+                printf(GREY " ┕> "RESET);
+                scanf("%c",&input);
+                if (input == 'd'){
+                    page++;
+                    continue;
+                }
+                else if (input == 'q'){
+                    break;
+                }
+                else if (input == 's'){
+                    page = 2;
+                }
+                else if (input == 'a'){
+                    page--;
+                }
+                else{
+                    continue;
+                }
+        }
+
+        if(page == 90){
+                printf(BOLD BYELLOW "\n  ==================  PROMPT CONFIG SYNTAX  ==================\n" RESET);
+                printf(BOLD YELLOW "   ┕────────────────   COLORS & FORMATS - 2   ──────────────┙\n\n\n\n" RESET);
+
+                printf(BYELLOW "    BRIGHT COLORS: \n" RESET);
+                printf(BRED     "\t'BRED'\n");
+                printf(BBLUE     "\t'BBLUE'\n");
+                printf(BYELLOW     "\t'BYELLOW'\n");
+                printf(BGREEN     "\t'BGREEN'\n");
+                printf(BCYAN     "\t'BCYAN'\n");
+                printf(BMAGENTA     "\t'BMAGENTA'\n");
+                printf(BGWHITE BBLACK     "\t'BBLACK'\n");
+
+
+
+
+                printf(RESET GREY "\n\n\n     Enter 'd' To go to the next page.\n"RESET);
+                printf(GREY "     Enter 's' To return to the help page.\n"RESET);
+                printf(GREY "     Enter 'a' To go to the previous page.\n"RESET);
+                printf(GREY "     Enter 'q' To go to the quit.\n\n"RESET);
+
+                printf(BOLD YELLOW "   ┌─────────────────────────────────────────────────────────┌\n" RESET);
+                printf(BOLD BYELLOW"  =============================================================\n\n" RESET);
+                char input;
+                printf(GREY " ┕> "RESET);
+                scanf("%c",&input);
+                if (input == 'd'){
+                    page++;
+                    continue;
+                }
+                else if (input == 'q'){
+                    break;
+                }
+                else if (input == 's'){
+                    page = 2;
+                }
+                else if (input == 'a'){
+                    page--;
+                }
+                else{
+                    continue;
+                }
+            }
+
+        if(page == 91){
+                printf(BOLD BYELLOW "\n  ==================  PROMPT CONFIG SYNTAX  ==================\n" RESET);
+                printf(BOLD YELLOW "   ┕────────────────   COLORS & FORMATS - 3   ──────────────┙\n\n\n\n" RESET);
+
+                printf(BYELLOW "    FORMATS: \n" RESET);
+                printf(BOLD     "\t'BOLD'\n"RESET);
+                printf(DIM     "\t'DIM'\n"RESET);
+                printf(ITALIC     "\t'ITALIC'\n"RESET);
+                printf(UNDERLINE     "\t'UNDERLINE'\n"RESET);
+                printf(BLINK     "\t'BLINK'\n"RESET);
+                printf(INVERT     "\t'INVERT'\n"RESET);
+                printf(STRIKETHROUGH     "\t'STRIKETHROUGH'\n"RESET);
+
+
+
+
+                printf(RESET GREY "\n\n\n     Enter 'd' To go to the next page.\n"RESET);
+                printf(GREY "     Enter 's' To return to the help page.\n"RESET);
+                printf(GREY "     Enter 'a' To go to the previous page.\n"RESET);
+                printf(GREY "     Enter 'q' To go to the quit.\n\n"RESET);
+
+                printf(BOLD YELLOW "   ┌─────────────────────────────────────────────────────────┌\n" RESET);
+                printf(BOLD BYELLOW"  =============================================================\n\n" RESET);
+                char input;
+                printf(GREY " ┕> "RESET);
+                scanf("%c",&input);
+                if (input == 'd'){
+                    page++;
+                    continue;
+                }
+                else if (input == 'q'){
+                    break;
+                }
+                else if (input == 's'){
+                    page = 2;
+                }
+                else if (input == 'a'){
+                    page--;
+                }
+                else{
+                    continue;
+                }
+            }
+
+        if(page == 92){
+                printf(BOLD BYELLOW "\n  ==================  PROMPT CONFIG SYNTAX  ==================\n" RESET);
+                printf(BOLD YELLOW "   ┕────────────────  BACKGROUND COLORS - 4   ──────────────┙\n\n\n\n" RESET);
+
+                printf(BYELLOW "    BACKGROUNDS: \n" RESET);
+                printf(BGBLACK     "\t'BGBLACK'\n");
+                printf(BGRED     "\t'BGRED'\n");
+                printf(BGGREEN     "\t'BGGREEN'\n");
+                printf(BGYELLOW     "\t'BGYELLOW'\n");
+                printf(BGBLUE     "\t'BGBLUE'\n");
+                printf(BGMAGENTA     "\t'BGMAGENTA'\n");
+                printf(BGCYAN     "\t'BGCYAN'\n");
+                printf(BGWHITE     "\t'BGWHITE'\n");
+
+
+
+
+                printf(RESET GREY "\n\n\n     Enter 'd' To go to the next page.\n"RESET);
+                printf(GREY "     Enter 's' To return to the help page.\n"RESET);
+                printf(GREY "     Enter 'a' To go to the previous page.\n"RESET);
+                printf(GREY "     Enter 'q' To go to the quit.\n\n"RESET);
+
+                printf(BOLD YELLOW "   ┌─────────────────────────────────────────────────────────┌\n" RESET);
+                printf(BOLD BYELLOW"  =============================================================\n\n" RESET);
+                char input;
+                printf(GREY " ┕> "RESET);
+                scanf("%c",&input);
+                if (input == 'd'){
+                    page++;
+                    continue;
+                }
+                else if (input == 'q'){
+                    break;
+                }
+                else if (input == 's'){
+                    page = 2;
+                }
+                else if (input == 'a'){
+                    page--;
+                }
+                else{
+                    continue;
+                }
+            }
+
+        if(page == 93){
+                printf(BOLD BYELLOW "\n  ==================  PROMPT CONFIG SYNTAX  ==================\n" RESET);
+                printf(BOLD YELLOW "   ┕────────────────   BRIGHT BG COLORS - 4   ──────────────┙\n\n\n\n" RESET);
+
+                printf(BYELLOW "    BRIGHT BACKGROUNDS: \n" RESET);
+                printf(BGBBLACK     "\t'BGBBLACK'\n");
+                printf(BGRED_B     "\t'BGRED_B'\n");
+                printf(BGGREEN_B     "\t'BGGREEN_B'\n");
+                printf(BGYELLOW_B     "\t'BGYELLOW_B'\n");
+                printf(BGBBLUE_B     "\t'BGBBLUE_B'\n");
+                printf(BGMAGENTA_B     "\t'BGMAGENTA_B'\n");
+                printf(BGCYAN_B     "\t'BGCYAN_B'\n");
+                printf(BGWHITE_B     "\t'BGWHITE_B'\n");
+
+
+
+
+                printf(RESET GREY "\n\n\n     Enter 'd' To go to the next page.\n"RESET);
+                printf(GREY "     Enter 's' To return to the help page.\n"RESET);
+                printf(GREY "     Enter 'a' To go to the previous page.\n"RESET);
+                printf(GREY "     Enter 'q' To go to the quit.\n\n"RESET);
+
+                printf(BOLD YELLOW "   ┌─────────────────────────────────────────────────────────┌\n" RESET);
+                printf(BOLD BYELLOW"  =============================================================\n\n" RESET);
+                char input;
+                printf(GREY " ┕> "RESET);
+                scanf("%c",&input);
+                if (input == 'd'){
+                    page++;
+                    continue;
+                }
+                else if (input == 'q'){
+                    break;
+                }
+                else if (input == 's'){
+                    page = 2;
+                }
+                else if (input == 'a'){
+                    page--;
+                }
+                else{
+                    continue;
+                }
+            }
+        }
+    }
+
+
+
+    
 
 
 
@@ -663,6 +984,8 @@ int main() {
     if (strcmp(token, "help") == 0 ) {
         
         printHelp();
+
+        system("clear");
         continue;
     }
 
